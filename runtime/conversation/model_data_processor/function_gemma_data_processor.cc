@@ -215,8 +215,7 @@ FunctionGemmaDataProcessor::Create(
     constraint_provider.reset(provider);
   }
   return absl::WrapUnique(new FunctionGemmaDataProcessor(
-      std::move(constraint_provider),
-      config, preface));
+      std::move(constraint_provider), config, preface));
 }
 
 absl::StatusOr<nlohmann::ordered_json>
@@ -362,11 +361,11 @@ FunctionGemmaDataProcessor::CreateConstraint(
       .close_quote = config_.close_quote.c_str(),
       .function_response_start = config_.function_response_start.c_str()};
   switch (config_.constraint_mode) {
-    case ConstraintMode::kFunctionCallOnly:
+    case FunctionGemmaDataProcessorConfig::ConstraintMode::kFunctionCallOnly:
       gemma_options.constraint_mode =
           kLiteRtLmGemmaConstraintModeFunctionCallOnly;
       break;
-    case ConstraintMode::kTextAndOr:
+    case FunctionGemmaDataProcessorConfig::ConstraintMode::kTextAndOr:
     default:
       gemma_options.constraint_mode = kLiteRtLmGemmaConstraintModeTextAndOr;
       break;
