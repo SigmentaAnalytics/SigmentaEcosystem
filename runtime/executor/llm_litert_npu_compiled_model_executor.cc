@@ -1482,8 +1482,7 @@ LlmLiteRtNpuCompiledModelExecutor::Create(
 litert::Expected<litert::Options> CreateLiteRtOptions() {
   LITERT_ASSIGN_OR_RETURN(auto options, ::litert::Options::Create());
   options.SetHardwareAccelerators(litert::HwAccelerators::kCpu);
-  LITERT_ASSIGN_OR_RETURN(auto& qnn_opts,
-                          options.GetQualcommOptions());
+  LITERT_ASSIGN_OR_RETURN(auto& qnn_opts, options.GetQualcommOptions());
   qnn_opts.SetLogLevel(::litert::qualcomm::QualcommOptions::LogLevel::kOff);
   qnn_opts.SetHtpPerformanceMode(
       ::litert::qualcomm::QualcommOptions::HtpPerformanceMode::kBurst);
@@ -1777,9 +1776,10 @@ LlmLiteRtNpuCompiledModelExecutor::CreateForModelWithoutPerLayerEmbedding(
 
   std::optional<std::unique_ptr<EmbeddingLookupManager>>
       maybe_embedding_lookup_manager = std::nullopt;
-  // If the model has vision encoder, we need to create the embedding lookup
-  // manager.
-  if (resources.GetTFLiteModel(ModelType::kTfLiteVisionEncoder).ok()) {
+  // If the model has vision or audio encoder, we need to create the embedding
+  // lookup manager.
+  if (resources.GetTFLiteModel(ModelType::kTfLiteVisionEncoder).ok() ||
+      resources.GetTFLiteModel(ModelType::kTfLiteAudioEncoderHw).ok()) {
     ASSIGN_OR_RETURN(maybe_embedding_lookup_manager,
                      EmbeddingLookupManager::Create(embedder_lrt_model, true,
                                                     "decode_embedder"));
