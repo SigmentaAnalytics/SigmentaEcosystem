@@ -390,9 +390,9 @@ LITERTLM_JNIEXPORT jlong JNICALL JNI_METHOD(nativeCreateEngine)(
     JNIEnv* env, jclass thiz, jstring model_path, jstring backend,
     jstring vision_backend, jstring audio_backend, jint max_num_tokens,
     jstring cache_dir, jboolean enable_benchmark,
-    jstring main_npu_native_library_dir, jstring vision_npu_native_library_dir,
-    jstring audio_npu_native_library_dir, jint main_backend_num_threads,
-    jint audio_backend_num_threads) {
+    jboolean enable_speculative_decoding, jstring main_npu_native_library_dir,
+    jstring vision_npu_native_library_dir, jstring audio_npu_native_library_dir,
+    jint main_backend_num_threads, jint audio_backend_num_threads) {
   const char* model_path_chars = env->GetStringUTFChars(model_path, nullptr);
   std::string model_path_str(model_path_chars);
   env->ReleaseStringUTFChars(model_path, model_path_chars);
@@ -533,6 +533,15 @@ LITERTLM_JNIEXPORT jlong JNICALL JNI_METHOD(nativeCreateEngine)(
 
   if (enable_benchmark) {
     settings->GetMutableBenchmarkParams();
+  }
+
+  if (enable_speculative_decoding) {
+    auto advanced_settings =
+        settings->GetMainExecutorSettings().GetAdvancedSettings().value_or(
+            litert::lm::AdvancedSettings());
+    advanced_settings.enable_speculative_decoding = true;
+    settings->GetMutableMainExecutorSettings().SetAdvancedSettings(
+        advanced_settings);
   }
 
   auto engine = EngineFactory::CreateAny(*settings);

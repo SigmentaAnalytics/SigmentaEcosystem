@@ -34,6 +34,14 @@ object ExperimentalFlags {
   var enableBenchmark: Boolean = false
 
   /**
+   * Whether to enable speculative decoding.
+   *
+   * Note: This flag is read only when a new [Engine] is created. Changing this value will not
+   * affect any existing [Engine] or [Conversation] instances.
+   */
+  var enableSpeculativeDecoding: Boolean = false
+
+  /**
    * Whether to enable conversation constrained decoding. This is primarily used for function
    * calling.
    *

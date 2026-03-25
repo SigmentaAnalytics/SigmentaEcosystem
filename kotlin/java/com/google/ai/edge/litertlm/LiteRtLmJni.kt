@@ -39,6 +39,7 @@ internal object LiteRtLmJni {
    * @param enableBenchmark Whether to enable benchmark mode or not.
    * @param cacheDir The directory for cache files.
    * @param enableBenchmark Whether to enable benchmark or not.
+   * @param enableSpeculativeDecoding Whether to enable speculative decoding.
    * @param mainNpuNativeLibraryDir The directory for the main backend NPU libraries.
    * @param visionNpuNativeLibraryDir The directory for the vision backend NPU libraries.
    * @param audioNpuNativeLibraryDir The directory for the audio backend NPU libraries.
@@ -54,6 +55,7 @@ internal object LiteRtLmJni {
     maxNumTokens: Int,
     cacheDir: String,
     enableBenchmark: Boolean,
+    enableSpeculativeDecoding: Boolean,
     mainNpuNativeLibraryDir: String,
     visionNpuNativeLibraryDir: String,
     audioNpuNativeLibraryDir: String,
