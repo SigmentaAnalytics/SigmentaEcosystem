@@ -110,7 +110,7 @@ and **session management**.
 | **Kotlin** | ✅<br>Stable | Native Android apps and JVM-based desktop tools. Optimized for Coroutines. | [Kotlin API Reference](./docs/api/kotlin/getting_started.md) |
 | **C++** | ✅<br>Stable | High-performance, cross-platform core logic and embedded systems. | [C++ API Reference](./docs/api/cpp/conversation.md) |
 | **Swift** | 🚀<br>In Dev | Native iOS and macOS integration with specialized Metal support. | Coming Soon |
-| **Python** | 🚀<br>In Dev | Rapid prototyping, development, and desktop-side scripting. | Coming Soon |
+| **Python** | 🚀<br>In Dev | Rapid prototyping, development, and desktop-side scripting. | [Python API Reference](./docs/api/python/getting_started.md) |
 
 ## Building from Source (Advanced)
 
