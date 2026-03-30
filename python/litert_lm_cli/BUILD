@@ -17,11 +17,23 @@ load(
     "pytype_strict_binary",
     "pytype_strict_library",
 )
+load("//:version.bzl", "VERSION")
 
 load("@custom_pip_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 load("@rules_python//python:packaging.bzl", "py_package", "py_wheel")
 load("//:version.bzl", "VERSION")
+
+version = select({
+    "//python:dev_build": VERSION + ".dev$(DEV_VERSION)",
+    "//conditions:default": VERSION,
+})
+
+genrule(
+    name = "version_py",
+    outs = ["version.py"],
+    cmd = "echo 'VERSION = \"'" + version + "'\"' > $@",
+)
 
 pytype_strict_library(
     name = "model",
@@ -70,7 +82,10 @@ py_test(
 
 pytype_strict_binary(
     name = "litert-lm",
-    srcs = ["main.py"],
+    srcs = [
+        "main.py",
+        ":version.py",
+    ],
     main = "main.py",
     tags = [
         "noios",
@@ -87,11 +102,6 @@ pytype_strict_binary(
     imports = [".."],
 )
 
-config_setting(
-    name = "is_nightly",
-    define_values = {"PYPI_NIGHTLY": "1"},
-)
-
 py_package(
     name = "package",
     packages = ["python.litert_lm_cli"],
@@ -102,7 +112,7 @@ py_wheel(
     name = "wheel",
     abi = "none",
     distribution = select({
-        ":is_nightly": "litert-lm-nightly",
+        "//python:dev_build": "litert-lm-nightly",
         "//conditions:default": "litert-lm",
     }),
     platform = "any",
@@ -120,17 +130,14 @@ py_wheel(
         "Operating System :: OS Independent",
     ],
     strip_path_prefixes = ["python"],
-    version = select({
-        ":is_nightly": VERSION + ".dev$(PYPI_NIGHTLY_DATE)",
-        "//conditions:default": VERSION,
-    }),
+    version = version,
     entry_points = {
         "console_scripts": [
             "litert-lm = litert_lm_cli.main:main",
         ],
     },
     requires = select({
-        ":is_nightly": ["litert-lm-api-nightly"],
+        "//python:dev_build": ["litert-lm-api-nightly"],
         "//conditions:default": ["litert-lm-api"],
     }) + [
         "click",

@@ -30,8 +30,8 @@ jobs:
           bazel build \
             --repo_env=HERMETIC_PYTHON_VERSION=${PYTHON_VERSION} \
             --@rules_python//python/config_settings:python_version=${PYTHON_VERSION} \
-            --define=PYPI_NIGHTLY=1 \
-            --define=PYPI_NIGHTLY_DATE=${DATE} \
+            --define=DEV_BUILD=1 \
+            --define=DEV_VERSION=${DATE} \
             --define=litert_link_capi_so=true \
             --define=resolve_symbols_in_exec=false \
             --config=linux_arm64 \

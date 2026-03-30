@@ -26,8 +26,8 @@ jobs:
           bazel build --config=macos_arm64 \
             --repo_env=HERMETIC_PYTHON_VERSION=${PYTHON_VERSION} \
             --@rules_python//python/config_settings:python_version=${PYTHON_VERSION} \
-            --define=PYPI_NIGHTLY=1 \
-            --define=PYPI_NIGHTLY_DATE=${DATE} \
+            --define=DEV_BUILD=1 \
+            --define=DEV_VERSION=${DATE} \
             -c opt //python/litert_lm:wheel
 
       - name: Install uv

@@ -137,11 +137,6 @@ _PREBUILT_LIBS = [
     "libLiteRt",
 ]
 
-config_setting(
-    name = "is_nightly",
-    define_values = {"PYPI_NIGHTLY": "1"},
-)
-
 genrule(
     name = "copy_prebuilt_libs_so",
     srcs = select({
@@ -212,8 +207,8 @@ py_package(
 # $ bazel build \
 #     --repo_env=HERMETIC_PYTHON_VERSION=${PYTHON_VERSION} \
 #     --@rules_python//python/config_settings:python_version=${PYTHON_VERSION} \
-#     --define=PYPI_NIGHTLY=1 \
-#     --define=PYPI_NIGHTLY_DATE=${DATE} \
+#     --define=DEV_BUILD=1 \
+#     --define=DEV_VERSION=${DATE} \
 #     -c opt //python/litert_lm:wheel
 py_wheel(
     name = "wheel",
@@ -225,7 +220,7 @@ py_wheel(
         "//conditions:default": "none",
     }),
     distribution = select({
-        ":is_nightly": "litert-lm-api-nightly",
+        "//python:dev_build": "litert-lm-api-nightly",
         "//conditions:default": "litert-lm-api",
     }),
     platform = select({
@@ -259,7 +254,7 @@ py_wheel(
     ],
     strip_path_prefixes = ["python"],
     version = select({
-        ":is_nightly": VERSION + ".dev$(PYPI_NIGHTLY_DATE)",
+        "//python:dev_build": VERSION + ".dev$(DEV_VERSION)",
         "//conditions:default": VERSION,
     }),
     deps = [":package"],
