@@ -1,0 +1,54 @@
+export interface ExperimentParameters {
+  tokenSymbol: string
+  analysisWindowMinutes: number
+  volatilityThreshold: number
+}
+
+export interface ExperimentResult {
+  summary: string
+  metrics: Record<string, number>
+  generatedAt: string
+}
+
+export interface ExperimentRecord {
+  experimentId: string
+  createdAt: string
+  description: string
+  parameters: ExperimentParameters
+  status: "draft" | "running" | "completed" | "failed"
+  results: ExperimentResult | null
+  notes: string
+}
+
+/**
+ * Initialize a new experiment record.
+ */
+export function createExperiment(
+  id: string,
+  description: string,
+  params: ExperimentParameters
+): ExperimentRecord {
+  return {
+    experimentId: id,
+    createdAt: new Date().toISOString(),
+    description,
+    parameters: params,
+    status: "draft",
+    results: null,
+    notes: "",
+  }
+}
+
+/**
+ * Update experiment status and results.
+ */
+export function completeExperiment(
+  record: ExperimentRecord,
+  result: ExperimentResult
+): ExperimentRecord {
+  return {
+    ...record,
+    status: "completed",
+    results: result,
+  }
+}
